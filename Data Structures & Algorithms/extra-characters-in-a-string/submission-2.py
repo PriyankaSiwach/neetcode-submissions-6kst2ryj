@@ -1,0 +1,45 @@
+class Node:
+    def __init__(self):
+        self.children={}
+        self.endofword=False
+
+class Trie:    
+    def __init__(self,words):
+        self.root= Node()
+        for w in words:
+            cur=self.root
+            for c in w:
+                if c not in cur.children:
+                    cur.children[c]=Node()
+                cur= cur.children[c]
+            cur.endofword= True
+  
+class Solution:
+    def minExtraChar(self, s: str, dictionary: List[str]) -> int:
+        trie= Trie(dictionary).root
+        dp={len(s):0}
+        def dfs(i):
+            if i in dp:
+                return dp[i]
+            res= 1+ dfs(i+1)
+            cur=trie
+            for j in range(i,len(s)):
+                if s[j] not in cur.children:
+                    break
+                cur= cur.children[s[j]]
+                if cur.endofword:
+                    res= min(res,dfs(j+1))
+            dp[i]=res
+            return res
+        return dfs(0)
+
+
+
+
+
+
+
+
+
+
+
